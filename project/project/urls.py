@@ -23,6 +23,6 @@ from line_bot_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('callback',views.callback)
+    path('callback',views.callback),
 
 ]
