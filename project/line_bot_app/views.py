@@ -60,6 +60,8 @@ def callback(request):
                     elif mtext[:6] == '<加入群組>':
                         reply_message = func.JoinGroup(mtext, user_id)
                         line_bot_api.reply_message(event.reply_token, TextMessage(text=reply_message))
+                    elif mtext == '<帳目資訊>':
+                        func.classfication("我在今天晚上中央大學買牛排了400元",user_id,"支出")
         return HttpResponse()
     else:
         return HttpResponseBadRequest()

@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
-
+import getpass
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--$&ve3+tr(ucslc)zf@=ph1f7o5)5)h-i__ldr35v&#(l(7=4j'
 LINE_CHANNEL_ACCESS_TOKEN='9ZOTbZYrULRKwzcozRyjIjpsgHPx5pO0glYPsP9oqmTQ+f66j2//J/XPZcHvRimZ7ytQLG3wERHA+JxtDuG7A+q6BHr6p5sV2Y2SsxjSo3gLW76Egfhi8jjlBqtWGuEd2bKpFD9VQzvniWvmaacahQdB04t89/1O/w1cDnyilFU='
 LINE_CHANNEL_SECRET='645785cb4949d14fbd8499f3cfed5fc7'
-OPENAI_API_KEY=''
+OPENAI_API_KEY=getpass.getpass()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

@@ -1,22 +1,24 @@
 import os
 import secrets
 import string
-from line_bot_app.models import GroupTable, PersonalTable,PersonalGroupLinkingTable#記得要改line_bot_app如果你和我不一樣
+from line_bot_app.models import * #記得要改line_bot_app如果你和我不一樣
 
 from langchain_community.utilities import SQLDatabase
 from langchain_openai import ChatOpenAI
-from langchain_community.agent_toolkits import create_sql_agent
+from module.langchain_tool import *
+from langchain.agents import load_tools, initialize_agent
+from langchain.agents import AgentType
+from langchain.tools import BaseTool
 
 from django.conf import settings
 from linebot import LineBotApi
-from openai import OpenAI
 from linebot.models import *
 from urllib.parse import quote
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 db = SQLDatabase.from_uri("mysql+mysqlconnector://root:123456789@localhost:3306/my_project")
 os.environ["OPENAI_API_KEY"] = settings.OPENAI_API_KEY
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
-
+tools = load_tools(["wikipedia"], llm=llm)
 def MyAccount(event):
     flex_message = FlexSendMessage(
         alt_text='Flex_message',
@@ -286,3 +288,25 @@ def JoinGroup(mtext, user_id):
             except Exception as e:
                 print(f"Error creating linking table record: {e}")
                 return '加入群組時發生錯誤，請稍後再試'
+def classfication(text,user_id,transaction_type):
+    user_category=PersonalCategoryTable.objects.filter(personal_id=user_id,transaction_type=transaction_type)
+    user_category_set=[]
+    for category in user_category:
+        category_data = {
+            "personal_category_id": category.personal_category_id,
+            "category_name": category.category_name,
+            "category_description": category.category_description,
+        }
+        user_category_set.append(category_data)
+    agent = get_account_classification_tool(llm)
+    print(agent(f"使用者類別：{user_category_set}，使用者輸入：{text}"))
+
+def get_account_classification_tool(llm):
+    tools = [account_classification()]
+
+    return initialize_agent(
+        tools,
+        llm,
+        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+        handle_parsing_errors=True,
+        verbose=True)
