@@ -159,46 +159,7 @@ def Form(event, text,user_id):
   )
   line_bot_api.reply_message(event.reply_token, flex_message)
 
-def creategroup(event):
-    flex_message = FlexSendMessage(
-      alt_text='Flex_message',
-      contents={
-        "type": "bubble",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "創建群組",
-              "color": "#FFFFFF",
-              "weight": "bold",
-              "size": "xl"
-            },
-          ]
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "uri": "https://liff.line.me/2004983305-yZblg4aW",
-                "label": "創建"
-              }
-            }
-          ]
-        },
-        "styles": {
-          "header": {
-            "backgroundColor": "#00B900"
-          }
-        }
-      }
-    )
-    line_bot_api.reply_message(event.reply_token, flex_message)
+
 #創建群組
 def CreateGroup(mtext,user_id):
     temp = mtext[6:]#取得井字號的後面
@@ -225,47 +186,7 @@ def CreateGroup(mtext,user_id):
             print(f"Error creating linking table record: {e}")
     except Exception as e:
         print(f"Error creating group: {e}")
-#joingroup的flex
-def joingroup(event):
-    flex_message = FlexSendMessage(
-      alt_text='Flex_message',
-      contents={
-        "type": "bubble",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": "加入群組",
-              "color": "#FFFFFF",
-              "weight": "bold",
-              "size": "xl"
-            },
-          ]
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "button",
-              "action": {
-                "type": "uri",
-                "uri": "https://liff.line.me/2004983305-RQ7w3gVM",
-                "label": "加入"
-              }
-            }
-          ]
-        },
-        "styles": {
-          "header": {
-            "backgroundColor": "#00B900"
-          }
-        }
-      }
-    )
-    line_bot_api.reply_message(event.reply_token, flex_message)
+
 #加入群組
 def JoinGroup(mtext, user_id):
     code = mtext[6:]  # 取得井字號的後面
@@ -298,15 +219,6 @@ def classfication(text,user_id,transaction_type):
             "category_description": category.category_description,
         }
         user_category_set.append(category_data)
-    agent = get_account_classification_tool(llm)
-    print(agent(f"使用者類別：{user_category_set}，使用者輸入：{text}"))
+    agent = get_category_classification_tool(llm)
+    print(agent(f"使用者類別：{user_category_set}，使用者輸入：{text}，請替使用者的輸入做帳目的分類")['output'])
 
-def get_account_classification_tool(llm):
-    tools = [account_classification()]
-
-    return initialize_agent(
-        tools,
-        llm,
-        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
-        handle_parsing_errors=True,
-        verbose=True)

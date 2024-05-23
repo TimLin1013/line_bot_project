@@ -24,5 +24,8 @@ from line_bot_app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('callback',views.callback),
+    path('search',views.search),
+    path('liff-add',views.liff_add),
+    path('get_user_account',views.get_user_account)
 
 ]
