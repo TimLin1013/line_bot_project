@@ -85,6 +85,8 @@ def get_user_account(request):
 
             account_list = []
             for account in user_account:
+                category_instance = account.category
+                category_name = category_instance.category_name if category_instance else None
                 account_data = {
                     "personal_account_id": account.personal_account_id,
                     "item": account.item,
@@ -94,7 +96,9 @@ def get_user_account(request):
                     "payment": account.payment,
                     "flag": account.flag,
                     "personal_id": account.personal.personal_id,
-                    "category_id": account.category.personal_category_id
+                    "category_id": account.category.personal_category_id,
+                    "category_name":category_name
+
                 }
                 account_list.append(account_data)
 
