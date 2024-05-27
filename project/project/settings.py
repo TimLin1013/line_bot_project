@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--$&ve3+tr(ucslc)zf@=ph1f7o5)5)h-i__ldr35v&#(l(7=4j'
 LINE_CHANNEL_ACCESS_TOKEN='9ZOTbZYrULRKwzcozRyjIjpsgHPx5pO0glYPsP9oqmTQ+f66j2//J/XPZcHvRimZ7ytQLG3wERHA+JxtDuG7A+q6BHr6p5sV2Y2SsxjSo3gLW76Egfhi8jjlBqtWGuEd2bKpFD9VQzvniWvmaacahQdB04t89/1O/w1cDnyilFU='
 LINE_CHANNEL_SECRET='645785cb4949d14fbd8499f3cfed5fc7'
-OPENAI_API_KEY=getpass.getpass()
+OPENAI_API_KEY=''
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -39,25 +39,29 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'line_bot_app',   #新增APP名稱
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
 
+]
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS':[os.path.join(BASE_DIR,'templates')],   #新增templates資料夾路徑
+        #'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS':['frontend/dist'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,10 +127,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'static')  #加入static路徑
+    os.path.join(BASE_DIR, "frontend/dist/static"),
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOW_ALL_ORIGINS = True
